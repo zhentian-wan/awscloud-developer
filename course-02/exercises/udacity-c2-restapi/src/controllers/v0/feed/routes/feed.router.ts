@@ -2,13 +2,12 @@ import { Router, Request, Response } from "express";
 import { FeedItem } from "../models/FeedItem";
 import { requireAuth } from "../../users/routes/auth.router";
 import * as AWS from "../../../../aws";
-import { BeforeFindAfterExpandIncludeAll } from "sequelize-typescript";
 
 const router: Router = Router();
 
 // Get all feed items
 router.get("/", async (req: Request, res: Response) => {
-  const items = await FeedItem.findAndCountAll({ order: [["id", "DESC"]] });
+  const items = await FeedItem.findAndCountAll();
   items.rows.map((item) => {
     if (item.url) {
       item.url = AWS.getGetSignedUrl(item.url);

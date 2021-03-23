@@ -1,8 +1,22 @@
-import {Table, Column, Model, HasMany, PrimaryKey, CreatedAt, UpdatedAt} from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  HasMany,
+  PrimaryKey,
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+
+interface IUser {
+  email: string;
+  password_hash: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 @Table
-export class User extends Model<User> {
-  
+export class User extends Model<IUser> {
   @PrimaryKey
   @Column
   public email!: string;
@@ -20,7 +34,7 @@ export class User extends Model<User> {
 
   short() {
     return {
-      email: this.email
-    }
+      email: this.email,
+    };
   }
 }
