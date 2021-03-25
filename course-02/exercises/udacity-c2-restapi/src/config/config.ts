@@ -9,4 +9,7 @@ export const config = {
     aws_profile: process.env.UDACITY_PROJECT2_AWS_PROFILE,
     aws_media_bucket: process.env.UDACITY_PROJECT2_MEDIA_BUCKET,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+  },
 };
