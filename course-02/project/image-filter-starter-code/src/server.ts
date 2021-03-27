@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
@@ -11,7 +11,21 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   const port = process.env.PORT || 8082;
   
   // Use the body parser middleware for post requests
-  app.use(bodyParser.json());
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true }))
+
+  let allFiles: string[] = [];
+  const cleanUp = (req: Request, res: Response, next: NextFunction) => {
+    const sendFile = res.sendFile.bind(res);
+    res.sendFile = (body: any) => {
+      sendFile(body);
+      deleteLocalFiles(allFiles)
+      allFiles = [];
+    }
+    next();
+  }
+
+  app.use('/', cleanUp)
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
@@ -26,6 +40,14 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
+  app.get('/filteredimage', async (req: Request, res: Response) => {
+    const {image_url} = req.query;
+    const filtered_img_path = await filterImageFromURL(image_url.toString())
+    res.sendFile(filtered_img_path);
+    allFiles.push(filtered_img_path);
+  })
+
+
 
   /**************************************************************************** */
 

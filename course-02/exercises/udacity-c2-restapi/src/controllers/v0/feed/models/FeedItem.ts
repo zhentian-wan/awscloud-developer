@@ -1,13 +1,26 @@
-import {Table, Column, Model, HasMany, PrimaryKey, CreatedAt, UpdatedAt, ForeignKey} from 'sequelize-typescript';
-import { User } from '../../users/models/User';
+import {
+  Table,
+  Column,
+  Model,
+  CreatedAt,
+  UpdatedAt,
+} from "sequelize-typescript";
+import { Optional } from "sequelize";
 
+interface IFeedItem {
+  id?: number;
+  caption: string;
+  url: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 @Table
-export class FeedItem extends Model<FeedItem> {
+export class FeedItem extends Model<IFeedItem> {
   @Column
-  public caption!: string;
+  public caption: string;
 
   @Column
-  public url!: string;
+  public url: string;
 
   @Column
   @CreatedAt
